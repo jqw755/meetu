@@ -5,7 +5,6 @@
  */
 
 const mongoose = require('mongoose');
-const initDb = require('./init.json');
 const Schema = mongoose.Schema;
 
 //创建用到的实例
@@ -13,7 +12,8 @@ module.exports = {
   userSchema: new Schema({
     name: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     pwd: {
       type: String,

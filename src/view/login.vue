@@ -105,38 +105,38 @@
         } else {
           let username = self.userInfo.account,
             password = self.userInfo.pwd;
-          self.$api.post('/api/signin', {
+          self.$api.post('/api/signup', {
             name: username,
             pwd: password,
           }).then((res) => {
             const data = res.data;
-            if (!data.code >= 0) {
+            if (!data.code > 0) {
               self.toastOpt.message = data.msg;
               self.showToast(self.toastOpt);
             } else {
-              let userInfos = {
-                token: data.token,
-                nickname: data.nickname,
-                avatar: data.avatar,
-                uid: data.uid,
-                userType: data.userType,
-                nickName: data.nickName,
-                email: data.email,
-                gender: data.gender,
-                birthday: data.birthday,
-                address: data.address,
-                intro: data.intro,
-                isAnchor: data.isAnchor,
-                mobile: data.mobile,
-                mobileNumber: data.mobileNumber,
-                emailAccount: data.emailAccount,
-                userName: data.userName
-              };
-              self.setUser(userInfos); // 存store
-              auth.setToken('TOKEN', userInfos.token); // 存本地
-              auth.setUserInfo('USERINFO', JSON.stringify(userInfos));
-              //登陆后返回上一个页面,根据参数requri
-              utils.routerBack(self);
+//              let userInfos = {
+//                token: data.token,
+//                nickname: data.nickname,
+//                avatar: data.avatar,
+//                uid: data.uid,
+//                userType: data.userType,
+//                nickName: data.nickName,
+//                email: data.email,
+//                gender: data.gender,
+//                birthday: data.birthday,
+//                address: data.address,
+//                intro: data.intro,
+//                isAnchor: data.isAnchor,
+//                mobile: data.mobile,
+//                mobileNumber: data.mobileNumber,
+//                emailAccount: data.emailAccount,
+//                userName: data.userName
+//              };
+//              self.setUser(userInfos); // 存store
+//              auth.setToken('TOKEN', userInfos.token); // 存本地
+//              auth.setUserInfo('USERINFO', JSON.stringify(userInfos));
+//              //登陆后返回上一个页面,根据参数requri
+//              utils.routerBack(self);
             }
           }).catch(e => {
             let options = {

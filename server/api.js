@@ -13,38 +13,38 @@ const fn = () => {
 };
 
 // 拦截路由,验证token
-router.use(function (req, res, next) {
-  if (req.path !== '/api/signin') {
-    // 拿取token数据 (登录接口无需token)
-    let token = (req.body && req.body.token) || (req.query && req.query.token) || req.headers['x-access-token'];
-    if (token) {
-      // 解码 token (验证 secret 和检查有效期（exp）)
-      jwt.verify(token, 'app.get("superSecret")', function (err, decoded) {
-        if (err) {
-          res.status(500).send({
-            msg: '系统错误',
-            code: -1
-          });
-        } else {
-          // 如果验证通过，在req中写入解密结果
-          req.decoded = decoded;
-          //console.log(decoded);
-          next(); //继续下一步路由
-        }
-      });
-    } else {
-      // 没有拿到token
-      res.status(403).send({
-        msg: '没有token',
-        code: 0
-      });
-    }
-  }
-});
+// router.use(function (req, res, next) {
+//   if (req.path !== '/api/signin') {
+//     // 拿取token数据 (登录接口无需token)
+//     let token = (req.params && req.params.token) || (req.query && req.query.token) || req.headers['x-access-token'];
+//     if (token) {
+//       // 解码 token (验证 secret 和检查有效期（exp）)
+//       jwt.verify(token, app.get("superSecret"), function (err, decoded) {
+//         if (err) {
+//           res.status(500).send({
+//             msg: '系统错误',
+//             code: -1
+//           });
+//         } else {
+//           // 如果验证通过，在req中写入解密结果
+//           req.decoded = decoded;
+//           //console.log(decoded);
+//           next(); //继续下一步路由
+//         }
+//       });
+//     } else {
+//       // 没有拿到token
+//       res.status(403).send({
+//         msg: '没有token',
+//         code: 0
+//       });
+//     }
+//   }
+// });
 
 // 文章详情
 router.get('/api/getArticle', (req, res) => {
-  const _id = req.body.id;
+  const _id = req.params.id;
   db.Article.findOne({_id}, (err, data) => {
     if (err) console.log(err);
     res.status(200).send(data);
@@ -62,11 +62,11 @@ router.get('/api/getArticles', (req, res) => {
 
 //保存文章
 router.post('/api/saveArticle', (req, res) => {
-  const id = req.body._id;
+  const id = req.params._id;
   const article = {
-    title: req.body.title,
-    date: req.body.date,
-    content: req.body.content
+    title: req.params.title,
+    date: req.params.date,
+    content: req.params.content
   }
   if (id) {
     //更新文章
@@ -83,7 +83,7 @@ router.post('/api/saveArticle', (req, res) => {
 
 //删除文章
 router.post('/api/deleteArticle', (req, res) => {
-  db.Article.findByIdAndRemove(req.body.id, fn)
+  db.Article.findByIdAndRemove(req.params.id, fn)
   res.status(200).send({
     msg: '保存成功',
     code: 1
@@ -92,7 +92,7 @@ router.post('/api/deleteArticle', (req, res) => {
 
 // login
 router.post('/api/signin', (req, res) => {
-  const {name, pwd} = req.body;
+  const {name, pwd} = req.params;
   db.User.findOne({name}, 'pwd', (err, user) => {
     switch (true) {
       case err:
@@ -101,11 +101,11 @@ router.post('/api/signin', (req, res) => {
           code: -1
         });
         break;
-      case !user:
+      case !name:
         res.send({code: 0, msg: '账号不存在'});
         break;
       case user.pwd === pwd:
-        let token = jwt.sign(user, 'app.get("superSecret")', {
+        let token = jwt.sign({user}, 'app.get("superSecret")', {
           expiresIn: 60 * 60 * 24 // 授权时效24小时
         });
         res.send({
@@ -125,17 +125,18 @@ router.post('/api/signin', (req, res) => {
 
 //register
 router.post('/api/signup', (req, res) => {
-  // res.header("Access-Control-Allow-Origin", "*");
-  const newUser = {
-    name: req.body.name,
-    pwd: req.body.pwd,
+  let newUser = {
+    name: req.query.name,
+    pwd: req.query.pwd,
   };
-  db.findOne({'name': newUser.name}, (err, data) => {
+  db.User.find({'name': newUser.name}, (err, user) => {
     if (err) {
-      res.send({code: -1, msg: '未知错误'});
-      res.status(500).end();
+      res.status(500).send({code: -1, msg: '未知错误'});
     } else {
-      if (newUser.name) {
+      console.log(req.params)
+      console.log(newUser)
+      console.log(user)
+      if (user.name === newUser.name) {
         res.send({code: 0, msg: '您输入的账户名已经存在咯,换一个吧'});
       } else {
         new db.User(newUser).save();
@@ -148,7 +149,7 @@ router.post('/api/signup', (req, res) => {
 
 //修改密码
 router.post('/api/savePwd', (req, res) => {
-  const {name, pwd} = req.body;
+  const {name, pwd} = req.params;
   db.User.findOneAndUpdate({name}, {pwd}, fn);
   res.status(200).send({
     msg: '密码修改成功',

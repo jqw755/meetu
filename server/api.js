@@ -3,9 +3,20 @@
  *
  * apis
  */
+
+/**
+ *   注意:
+ *    req.params.xxxxx 从path中的变量   /hello/:name/:tel
+ req.query.xxxxx 从get中的?xxxx=中
+ req.body.xxxxx 从post中的变量
+ *
+ *
+ * */
+
 const express = require('express');
 const app = express();
 const router = express.Router();
+
 // 使用jwt签名
 var jwt = require('jsonwebtoken');
 const db = require('./dbModel');
@@ -44,7 +55,7 @@ const fn = () => {
 
 // 文章详情
 router.get('/api/getArticle', (req, res) => {
-  const _id = req.params.id;
+  const _id = req.query.id;
   db.Article.findOne({_id}, (err, data) => {
     if (err) console.log(err);
     res.status(200).send(data);
@@ -53,16 +64,33 @@ router.get('/api/getArticle', (req, res) => {
 
 // 文章列表
 router.get('/api/getArticles', (req, res) => {
-  db.Article.find({}, 'title data content', (err, data) => {
-    if (err) throw err;
-    // res.send(data);
-    res.status(200).send(data);  //JSON.stringify
-  });
+  let limitObj = {
+    limitNum: parseInt(req.query.pagesize), // 转换成int
+    limitPage: parseInt(req.query.pagenum)
+  };
+  // 第一个 {} 放 where 条件，为空表示返回集合中所有文档。
+  // 第二个 {} 指定那些列显示和不显示 （0表示不显示 1表示显示)。
+  db.Article.find({}, {'title': 1, 'data': 1, 'content': 1, _id: 0}, (err, data) => {
+    if (err) {
+      console.log(err)
+      res.status(500).send({
+        msg: '系统错误',
+        code: -1
+      });
+    } else {
+      // res.send(data);
+      res.status(200).send({
+        code: 1,
+        mag: '获取文章列表成功',
+        result: data
+      });
+    }
+  }).limit(limitObj.limitNum);
 });
 
 //保存文章
 router.post('/api/saveArticle', (req, res) => {
-  const id = req.params._id;
+  const id = req.body._id;
   const article = {
     title: req.params.title,
     date: req.params.date,
@@ -92,29 +120,30 @@ router.post('/api/deleteArticle', (req, res) => {
 
 // login
 router.post('/api/signin', (req, res) => {
-  const {name, pwd} = req.params;
-  db.User.findOne({name}, 'pwd', (err, user) => {
+  const {name, pwd} = req.body;
+  db.User.findOne({name}, 'name pwd ', (err, data) => {
     switch (true) {
-      case err:
+      case !!err:
         res.status(500).send({
           msg: '系统错误',
           code: -1
         });
         break;
-      case !name:
+      case !data:
         res.send({code: 0, msg: '账号不存在'});
         break;
-      case user.pwd === pwd:
-        let token = jwt.sign({user}, 'app.get("superSecret")', {
+      case data.pwd === pwd:
+        let token = jwt.sign({data}, 'app.get("superSecret")', {
           expiresIn: 60 * 60 * 24 // 授权时效24小时
         });
         res.send({
           message: '登陆成功',
           token: token,
-          code: 1
+          code: 1,
+          result: data
         });
         break;
-      case user.pwd !== pwd:
+      case data.pwd !== pwd:
         res.send({code: 2, msg: '密码错误'});
         break;
       default :
@@ -126,16 +155,13 @@ router.post('/api/signin', (req, res) => {
 //register
 router.post('/api/signup', (req, res) => {
   let newUser = {
-    name: req.query.name,
-    pwd: req.query.pwd,
+    name: req.body.name,
+    pwd: req.body.pwd,
   };
   db.User.find({'name': newUser.name}, (err, user) => {
     if (err) {
       res.status(500).send({code: -1, msg: '未知错误'});
     } else {
-      console.log(req.params)
-      console.log(newUser)
-      console.log(user)
       if (user.name === newUser.name) {
         res.send({code: 0, msg: '您输入的账户名已经存在咯,换一个吧'});
       } else {
@@ -149,7 +175,7 @@ router.post('/api/signup', (req, res) => {
 
 //修改密码
 router.post('/api/savePwd', (req, res) => {
-  const {name, pwd} = req.params;
+  const {name, pwd} = req.body;
   db.User.findOneAndUpdate({name}, {pwd}, fn);
   res.status(200).send({
     msg: '密码修改成功',

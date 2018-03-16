@@ -9,15 +9,15 @@
   z-index: 1000;
   .loading {
     width: 70%;
-    max-width: 8rem;
+    max-width: 24rem;
     min-height: 2rem;
-    box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.3);
-    padding: 1rem 0;
-    font-size: 0.4rem;
+    box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.3);
+    padding: 2rem 0;
+    font-size: 1.4rem;
     //background: dimgrey;
     background: #1ABC9C;
-    border-radius: 0.2rem;
+    border-radius: 0.5rem;
     position: absolute;
     left: 50%;
     top: 30%;
@@ -30,6 +30,6 @@
     background: rgba(0, 0, 0, 0.2);
   }
   .loading_img {
-    padding-bottom: 0.5rem;
+    padding-bottom: 2rem;
   }
 }

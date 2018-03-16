@@ -9,6 +9,9 @@ const mutations = {
     state.title = t;
     document.title = state.title;
   },
+  SETUSER: (state, u) => {
+    state.userInfo = u;
+  },
   SHOWNOTICE: (state, params) => {
     state.noticeOptions = {
       isShow: params.isShow,  //显示/隐藏

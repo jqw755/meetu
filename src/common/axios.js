@@ -67,7 +67,7 @@ function post(url, data) {
     timeout: 10000,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      'Content-Type': 'application/json; charset=UTF-8'
     }
   }).then((response) => {
       return checkStatus(response)

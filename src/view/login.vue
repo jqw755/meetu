@@ -17,8 +17,8 @@
         <div class="input_wrap">
           <input :type="pwdType" placeholder="请输入密码" class="ipt pwd" v-model="userInfo.pwd" @input="pwdEvt">
           <p class="showPwd" @click="eyeShow">
-            <img src="../assets/public/eye_close.png" alt="" v-show="!showPassword">
-            <img src="../assets/public/eye_show.png" alt="" v-show="showPassword">
+            <img src="../assets/public/eye-close.png" alt="" v-show="!showPassword">
+            <img src="../assets/public/eye-show.png" alt="" v-show="showPassword">
           </p>
         </div>
         <p class="input_wrap">
@@ -105,7 +105,7 @@
         } else {
           let username = self.userInfo.account,
             password = self.userInfo.pwd;
-          self.$api.post('/api/signup', {
+          self.$api.post('/api/signin', {
             name: username,
             pwd: password,
           }).then((res) => {
@@ -114,29 +114,24 @@
               self.toastOpt.message = data.msg;
               self.showToast(self.toastOpt);
             } else {
-//              let userInfos = {
-//                token: data.token,
-//                nickname: data.nickname,
-//                avatar: data.avatar,
-//                uid: data.uid,
-//                userType: data.userType,
-//                nickName: data.nickName,
-//                email: data.email,
-//                gender: data.gender,
-//                birthday: data.birthday,
-//                address: data.address,
-//                intro: data.intro,
-//                isAnchor: data.isAnchor,
-//                mobile: data.mobile,
-//                mobileNumber: data.mobileNumber,
-//                emailAccount: data.emailAccount,
-//                userName: data.userName
-//              };
-//              self.setUser(userInfos); // 存store
-//              auth.setToken('TOKEN', userInfos.token); // 存本地
-//              auth.setUserInfo('USERINFO', JSON.stringify(userInfos));
-//              //登陆后返回上一个页面,根据参数requri
-//              utils.routerBack(self);
+              if(data.code === 1){
+                let userInfos = {
+                  token: data.token,
+                  avatar: data.avatar,
+                  name: data.result.name,
+                  gender: data.gender,
+                  birthday: data.birthday
+                };
+                self.setUser(userInfos); // 存store
+                auth.setToken(userInfos.token); // 存本地
+                auth.setUserInfo(JSON.stringify(userInfos));
+                //登陆后返回上一个页面,根据参数requri
+                utils.routerBack(self);
+              }else if(data.code === 2){
+                self.toastOpt.message = data.msg;
+                self.showToast(self.toastOpt);
+              }
+
             }
           }).catch(e => {
             let options = {

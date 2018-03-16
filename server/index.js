@@ -9,7 +9,12 @@
 const express = require('express');
 // const Model = require('./dbModel');
 const api = require('./api');
+// bodyParser 必须放在api后面,否则请求req.body会报undefined
+const bodyParser = require('body-parser');
 const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 // 设置允许跨域  另一种办法是使用express的cors模块
 app.all('*', function(req, res, next) {
@@ -24,7 +29,6 @@ app.all('*', function(req, res, next) {
 
 // port
 app.set('port', (process.env.port || 3000));
-
 let appPort = app.get('port');
 app.listen(appPort, function () {
   console.log('application run at: http://localhost:' + appPort);

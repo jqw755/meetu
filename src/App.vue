@@ -11,9 +11,10 @@
     <div class="global-footer">
       <mu-paper>
         <mu-bottom-nav :value="bottomNav" @change="handleChange">
-          <mu-bottom-nav-item value="recents" title="Recents" icon="restore"/>
-          <mu-bottom-nav-item value="favorites" title="Favorites" icon="favorite"/>
-          <mu-bottom-nav-item value="nearby" title="Nearby" icon="location_on"/>
+          <mu-bottom-nav-item value="dynamics" title="动态" icon="home"/>
+          <mu-bottom-nav-item value="message" title="信息" icon="message"/>
+          <mu-bottom-nav-item value="message" title="" icon="add"/>
+          <mu-bottom-nav-item value="me" title="自己" icon="own"/>
         </mu-bottom-nav>
       </mu-paper>
     </div>

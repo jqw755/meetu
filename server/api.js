@@ -1,6 +1,5 @@
 /**
  * Created by jingqw on 18/3/12.
- *
  * apis
  */
 
@@ -70,9 +69,9 @@ router.get('/api/getArticles', (req, res) => {
   };
   // 第一个 {} 放 where 条件，为空表示返回集合中所有文档。
   // 第二个 {} 指定那些列显示和不显示 （0表示不显示 1表示显示)。
-  db.Article.find({}, {'title': 1, 'data': 1, 'content': 1, _id: 0}, (err, data) => {
+  db.Article.find({}, {'title': 1, 'date': 1, 'content': 1, _id: 0}, (err, data) => {
     if (err) {
-      console.log(err)
+      // console.log(err)
       res.status(500).send({
         msg: '系统错误',
         code: -1
@@ -85,26 +84,30 @@ router.get('/api/getArticles', (req, res) => {
         result: data
       });
     }
-  }).limit(limitObj.limitNum);
+  }).sort({time: -1}).limit(limitObj.limitNum);
 });
 
 //保存文章
 router.post('/api/saveArticle', (req, res) => {
-  const id = req.body._id;
   const article = {
-    title: req.params.title,
-    date: req.params.date,
-    content: req.params.content
-  }
-  if (id) {
+    id: req.query.id || '',
+    title: req.body.title,
+    // date: (new Date()).getTime(),
+    date: req.body.date,
+    content: req.body.content
+  };
+  let tipMsg = '';
+  if (article.id) {
     //更新文章
-    db.Article.findByIdAndUpdate(id, article, fn)
+    db.Article.findByIdAndUpdate(article.id, article, fn);
+    tipMsg = '更新成功';
   } else {
     //新建文章
-    new db.Article(article).save()
+    new db.Article(article).save();
+    tipMsg = '发布成功'
   }
   res.status(200).send({
-    msg: '保存成功',
+    msg: tipMsg,
     code: 1
   });
 });
@@ -158,17 +161,16 @@ router.post('/api/signup', (req, res) => {
     name: req.body.name,
     pwd: req.body.pwd,
   };
-  db.User.find({'name': newUser.name}, (err, user) => {
+  db.User.findOne({'name': newUser.name}, (err, user) => {
     if (err) {
       res.status(500).send({code: -1, msg: '未知错误'});
     } else {
-      if (user.name === newUser.name) {
-        res.send({code: 0, msg: '您输入的账户名已经存在咯,换一个吧'});
+      if (user && user.name) {
+        res.send({code: 0, msg: '名称存在咯，换一个吧'});
       } else {
         new db.User(newUser).save();
-        res.send({code: 1, msg: '注册成功, 欢迎您 >v<'});
+        res.send({code: 1, msg: '注册成功，带您去登陆 >v<'});
       }
-      res.status(200).end();
     }
   });
 });

@@ -16,7 +16,7 @@ axios.interceptors.request.use(config => {
 }, error => {
   console.log('请求出错,测试下面的return promise.reject');
   return Promise.reject(error);
-})
+});
 
 //响应拦截
 axios.interceptors.response.use(response => {
@@ -25,7 +25,7 @@ axios.interceptors.response.use(response => {
 }, error => {
   console.log('响应出错,测试下面的return promise.resolve');
   return Promise.resolve(error.response);
-})
+});
 
 //检查响应状态
 function checkStatus(response) {

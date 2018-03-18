@@ -1,38 +1,57 @@
 <template>
   <div class="index-container">
-    <section class="article-wrap">
+    <!-- 上拉刷新 -->
+    <!--<mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>-->
+
+    <div class="article-wrap">
       <div class="article-card" v-for="(article, index) in articles" :key="index">
         <mu-card>
-          <mu-card-header title="我的名字" subTitle="发布时间">
+          <mu-card-header title="我的名字" :subTitle="article.date">
             <mu-avatar src="../../assets/public/me.png" slot="avatar"/>
           </mu-card-header>
           <mu-card-media title="图片标题" subTitle="图片描述" v-if="article.image">
             <img src="/src/assets/public/article-img.png"/>
           </mu-card-media>
-          <mu-card-title title="文章标题" subTitle="文章简介/描述"/>
+          <mu-card-title :title="article.title" v-if="article.title"/>
           <mu-card-text>{{article.content}}</mu-card-text>
           <mu-card-actions>
-            <mu-flat-button label="赞"/>
-            <mu-flat-button label="收藏"/>
-            <mu-flat-button label="转发"/>
+            <mu-icon value="favorite_border" color="gray"/>
+            <mu-icon-button href="/articleDetail" icon="drafts"/>
+            <mu-icon-button icon="star_border"/>
+            <mu-icon-button icon="share"/>
           </mu-card-actions>
         </mu-card>
       </div>
-    </section>
+    </div>
+    <!-- 向下拉加载更多 -->
+    <!--<mu-infinite-scroll :scroller="scroll" :loading="loading" @load="loadMore"/>-->
+    <!-- footer -->
+    <globalFooter :changeBottomNav="bottomNav"></globalFooter>
   </div>
 </template>
 
 <script>
-  import {mapActions, mapState, mapGetters} from 'vuex'
+  import {mapActions} from 'vuex'
+  import globalFooter from '../layout/footer'
+
   export default {
-    data () {
+    data() {
       return {
+        bottomNav: 'dynamics',
         articles: {},
+        loading: false,
+        scroll: null,
+        refreshing: false,
+        trigger: null
       }
     },
     mounted() {
       const self = this;
-      self.getIndexData();
+      self.getIndexData(1, 10);
+      //  挂载加载实例
+      this.trigger = this.$el;
+      this.scroll = this.$el;
+      // console.log(this.scroll)
     },
     methods: {
       ...mapActions([
@@ -41,9 +60,9 @@
         'showToast',
         'setTitle',
       ]),
-      getIndexData() {
+      getIndexData(pageNum, pageSize) {
         const self = this;
-        self.$api.get('/api/getArticles', {pagenum: 1, pagesize: 10}, true).then((res) => {
+        self.$api.get('/api/getArticles', {pagenum: pageNum, pagesize: pageSize}, true).then((res) => {
           const data = res.data;
           if (!data.code > 0) {
             self.toastOpt.message = data.msg;
@@ -62,12 +81,38 @@
           self.showNotice(options);
         })
       },
+      loadMore() {
+        const self = this;
+        self.loading = true;
+        self.getIndexData(2, 10);
+        self.loading = false
+      },
+      refresh() {
+        const self = this;
+        self.refreshing = true;
+        self.getIndexData(1, 10);
+        self.refreshing = false;
+      }
+
     },
+    components: {
+      globalFooter
+    }
   }
 </script>
 
 <style lang="scss" scoped>
+  .index-container {
+    height: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    user-select: none;
+  }
+
   .article-card {
     margin-bottom: 1.5rem;
   }
 </style>
+
+

@@ -1,31 +1,39 @@
 <template>
-  <section class="login_wrap">
-    <div class="login_content">
+  <section class="login-wrap">
+    <div class="login-header">
+      <mu-appbar title="">
+        <mu-icon-button icon="keyboard_arrow_left" slot="left" to="/"/>
+        <!--<mu-flat-button label="欢迎登录" solt="default"/>-->
+      </mu-appbar>
+    </div>
+    <div class="login-content">
       <div class="head">
-        <p class="login_default">
+        <p class="login-default">
           <router-link to="/">
-            <!--<img src="../image/public/logo_default.png" alt="">-->
+            <!--<img src="../image/public/logo-default.png" alt="">-->
           </router-link>
         </p>
         <p class="title">登录</p>
       </div>
-      <div class="form_content">
-        <p class="input_wrap">
+      <div class="form-content">
+        <p class="input-wrap">
           <input type="text" placeholder="请输入您注册的邮箱或手机号" class="ipt account" v-model="userInfo.account"
                  @input="accountEvt">
         </p>
-        <div class="input_wrap">
+        <div class="input-wrap">
           <input :type="pwdType" placeholder="请输入密码" class="ipt pwd" v-model="userInfo.pwd" @input="pwdEvt">
           <p class="showPwd" @click="eyeShow">
-            <img src="../assets/public/eye-close.png" alt="" v-show="!showPassword">
-            <img src="../assets/public/eye-show.png" alt="" v-show="showPassword">
+            <img src="../../assets/public/eye-close.png" alt="" v-show="!showPassword">
+            <img src="../../assets/public/eye-show.png" alt="" v-show="showPassword">
           </p>
         </div>
-        <p class="input_wrap">
-          <input type="button" value="登录" :disabled="isDisabled" class="ipt login_btn"
+        <p class="input-wrap">
+          <input type="button" value="登录" :disabled="isDisabled" class="ipt login-btn"
                  @click="loginEvt()">
-          <!--showToast(toastOpt)-->
-          <!--showNotice(noticeOptions)-->
+        </p>
+        <p class="input-wrap action-account">
+          <router-link to="/signup" class="to-signup">没有账号？马上注册</router-link>
+          <router-link to="/findPwd" class="ro-find-pwd">忘记密码？</router-link>
         </p>
       </div>
     </div>
@@ -34,8 +42,8 @@
 
 <script>
   import {mapActions, mapState, mapGetters} from 'vuex'
-  import utils from '../common/utils'
-  import auth from '../common/auth'
+  import utils from '../../common/utils'
+  import auth from '../../common/auth'
 
   export default {
     data() {
@@ -136,7 +144,7 @@
           }).catch(e => {
             let options = {
               isShow: true,
-              message: e.msg || '数据获取出错,请重试',
+              message: e.msg || '登录出错,请重试',
               noCancel: true,
             };
             self.showNotice(options);
@@ -152,6 +160,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '../style/login';
+  @import '../../style/login';
 
 </style>

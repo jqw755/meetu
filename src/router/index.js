@@ -5,8 +5,12 @@ import store from '../store/index'
 
 import auth from '../common/auth'
 
-import HelloWorld from '../view/index/index'
-import login from '../view/login.vue'
+import index from '../view/index/index'
+import articleDetail from '../view/article/detail'
+import articleSend from '../view/article/send'
+import login from '../view/login/login'
+import signup from '../view/login/signup'
+import chat from '../view/chat/chat'
 
 Vue.use(Router);
 
@@ -15,16 +19,39 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      // meta: {
-      //   requireAuth: true,
-      //   keepAlive: true
-      // },
+      component: index,
+      keepAlive: true
+    },
+    {
+      path: '/index',
+      component: index,
+      keepAlive: true
+    },
+    {
+      path: '/articleDetail',
+      component: articleDetail
+    },
+    {
+      path: '/articleSend',
+      component: articleSend,
+      meta: {
+        requireAuth: true,
+      },
     },
     {
       path: '/login',
       component: login
+    },
+    {
+      path: '/signup',
+      component: signup
+    },
+    {
+      path: '/chat',
+      component: chat,
+      meta: {
+        requireAuth: true,
+      },
     }
   ]
 });

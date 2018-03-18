@@ -24,9 +24,12 @@ module.exports = {
   articleSchema: new Schema({
     title: {
       type: String,
+      // required: true
+    },
+    date: {
+      type: String,
       required: true
     },
-    data: String,
     content: {
       type: String,
       required: true

@@ -26,7 +26,7 @@
                 if (b === true) {
                     setTimeout(function () {
                         self.toastOptions.isShow = false;
-                    }, 3000)
+                    }, 3000 )
                 }
             }
         }

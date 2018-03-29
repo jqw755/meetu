@@ -9,14 +9,16 @@
           <mu-card-header title="我的名字" :subTitle="article.date">
             <mu-avatar src="../../assets/public/me.png" slot="avatar"/>
           </mu-card-header>
-          <mu-card-media title="图片标题" subTitle="图片描述" v-if="article.image">
+          <mu-card-media v-if="article.image">
             <img src="/src/assets/public/article-img.png"/>
           </mu-card-media>
-          <mu-card-title :title="article.title" v-if="article.title"/>
-          <mu-card-text>{{article.content}}</mu-card-text>
+          <router-link :to="`/detail/${article._id}`">
+            <mu-card-title :title="article.title" v-if="article.title"/>
+            <mu-card-text>{{article.content}}</mu-card-text>
+          </router-link>
           <mu-card-actions>
             <mu-icon value="favorite_border" color="gray"/>
-            <mu-icon-button href="/articleDetail" icon="drafts"/>
+            <mu-icon-button :href="`/detail/${article._id}`" icon="drafts"/>
             <mu-icon-button icon="star_border"/>
             <mu-icon-button icon="share"/>
           </mu-card-actions>
@@ -51,6 +53,7 @@
       //  挂载加载实例
       this.trigger = this.$el;
       this.scroll = this.$el;
+      self.setTitle('meetu');
       // console.log(this.scroll)
     },
     methods: {
@@ -62,7 +65,7 @@
       ]),
       getIndexData(pageNum, pageSize) {
         const self = this;
-        self.$api.get('/api/getArticles', {pagenum: pageNum, pagesize: pageSize}, true).then((res) => {
+        self.$api.get('/api/getArticles', {'pagenum': pageNum, 'pagesize': pageSize}, true).then((res) => {
           const data = res.data;
           if (!data.code > 0) {
             self.toastOpt.message = data.msg;

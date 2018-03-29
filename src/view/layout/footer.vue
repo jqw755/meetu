@@ -3,10 +3,10 @@
   <div class="global-footer">
     <mu-paper>
       <mu-bottom-nav :value="changeBottomNav" @change="handleChange">
-        <mu-bottom-nav-item value="dynamics" title="动态" icon="home" to="/"/>
-        <mu-bottom-nav-item value="send" title="发布" icon="control_point" to="/articleSend"/>
+        <mu-bottom-nav-item value="dynamics" title="动态" icon="home" to="/index"/>
+        <mu-bottom-nav-item value="send" title="发布" icon="control_point" to="/send"/>
         <mu-bottom-nav-item value="message" title="信息" icon="message" to="/chat"/>
-        <mu-bottom-nav-item value="me" title="自己" icon="person" to="login"/>
+        <mu-bottom-nav-item value="person" title="自己" icon="person" to="/customer"/>
       </mu-bottom-nav>
     </mu-paper>
   </div>

@@ -11,10 +11,22 @@
     </section>
     <section class="detail-wrap">
       <div class="">
-        <mu-sub-header>阳光</mu-sub-header>
-        <mu-content-block>
-          散落在指尖的阳光，我试着轻轻抓住光影的踪迹，它却在眉宇间投下一片淡淡的阴影。调皮的阳光掀动了四月的心帘，温暖如约的歌声渐起。似乎在诉说着，我也可以在漆黑的角落里，找到阴影背后的阳光，找到阳光与阴影奏出和谐的旋律。我要用一颗敏感赤诚的心迎接每一缕滑过指尖的阳光！
-        </mu-content-block>
+        <mu-card>
+          <mu-card-header :title="articleInfo.username" :subTitle="articleInfo.date">
+            <mu-avatar src="../../assets/public/me.png" slot="avatar"/>
+          </mu-card-header>
+          <mu-card-media v-if="articleInfo.image">
+            <img src="/src/assets/public/article-img.png"/>
+          </mu-card-media>
+          <mu-sub-header v-if="articleInfo.title">{{articleInfo.title}}</mu-sub-header>
+          <mu-content-block>{{articleInfo.content}}</mu-content-block>
+          <mu-card-actions>
+            <mu-checkbox uncheckIcon="favorite_border" checkedIcon="favorite"/>
+            <mu-checkbox uncheckIcon="star_border" checkedIcon="star" color="red"/>
+            <!--<mu-icon-button icon="star_border"/>-->
+            <mu-icon-button icon="share"/>
+          </mu-card-actions>
+        </mu-card>
       </div>
     </section>
   </div>
@@ -22,16 +34,21 @@
 
 <script>
   import {mapActions} from 'vuex'
+
   export default {
-    data () {
+    data() {
       return {
+        toastOpt: {
+          isShow: true,
+          message: ''
+        },
         articleInfo: {},
       }
     },
     mounted() {
       const self = this;
-      // self.getDetailData();
       self.setTitle('文章详情');
+      self.getDetailData();
     },
     methods: {
       ...mapActions([
@@ -41,8 +58,10 @@
       ]),
       getDetailData() {
         const self = this;
-        self.$api.get('/api/getArticle', {}, true).then((res) => {
+        let articleId = self.$route.params.id;
+        self.$api.get('/api/getArticle', {'id': articleId}, true).then((res) => {
           const data = res.data;
+          // 所有code<0的操作,在axios.js中的检查状态码中都已经定义了, 日后更改这个一部分
           if (!data.code > 0) {
             self.toastOpt.message = data.msg;
             self.showToast(self.toastOpt);

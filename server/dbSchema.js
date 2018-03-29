@@ -22,6 +22,15 @@ module.exports = {
   }),
 
   articleSchema: new Schema({
+    username: {
+      type: String,
+      required: true
+    },
+    viewAuth: {
+      default: '1',
+      type: String,
+      required: true
+    },
     title: {
       type: String,
       // required: true

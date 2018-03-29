@@ -13,6 +13,13 @@ const api = require('./api');
 const bodyParser = require('body-parser');
 const app = express();
 
+// 用于静态展示入口
+let router = express.Router();
+router.get('/', function (req, res, next) {
+  req.url = '../index.html';
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -23,13 +30,16 @@ app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
   res.header("Content-Type", "application/json;charset=utf-8");
-  if(req.method=="OPTIONS") res.sendStatus(200);/*让options请求快速返回*/
+  if(req.method==="OPTIONS") res.sendStatus(200); // 让options请求快速返回
   else  next();
 });
 
 // port
 app.set('port', (process.env.port || 3000));
 let appPort = app.get('port');
-app.listen(appPort, function () {
+let server = app.listen(appPort, function () {
   console.log('application run at: http://localhost:' + appPort);
 });
+// webSocket
+require('./socket.js')(server);
+

@@ -11,6 +11,7 @@ import articleSend from '../view/article/send'
 import login from '../view/login/login'
 import signup from '../view/login/signup'
 import chat from '../view/chat/chat'
+import customer from '../view/customer/customer'
 
 Vue.use(Router);
 
@@ -28,11 +29,11 @@ const router = new Router({
       keepAlive: true
     },
     {
-      path: '/articleDetail',
+      path: '/detail/:id',
       component: articleDetail
     },
     {
-      path: '/articleSend',
+      path: '/send',
       component: articleSend,
       meta: {
         requireAuth: true,
@@ -45,6 +46,13 @@ const router = new Router({
     {
       path: '/signup',
       component: signup
+    },
+    {
+      path: '/customer',
+      component: customer,
+      meta: {
+        requireAuth: true,
+      }
     },
     {
       path: '/chat',

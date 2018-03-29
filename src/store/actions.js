@@ -3,6 +3,9 @@
  */
 import Vue from 'vue'
 const actions = {
+  loading: ({commit}, d) => {
+    commit('LOADING', d);
+  },
   setUser: ({commit}, u) => {
     commit('SETUSER', u);
   },

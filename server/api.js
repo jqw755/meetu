@@ -6,8 +6,12 @@
 /**
  *   注意:
  *    req.params.xxxxx 从path中的变量   /hello/:name/:tel
- req.query.xxxxx 从get中的?xxxx=中
- req.body.xxxxx 从post中的变量
+ *    req.query.xxxxx 从get中的?xxxx=中
+ *    req.body.xxxxx 从post中的变量
+ *    mongoDb:
+ *      // 第一个 {} 放 where 条件，为空表示返回集合中所有文档。
+ *      // 第二个 {} 指定那些列显示和不显示 （0表示不显示 1表示显示)。
+ *      // MongoDB执行顺序: sort skip limit
  *
  *
  * */
@@ -53,23 +57,28 @@ const fn = () => {
 // });
 
 // 文章详情
-router.get('/api/getArticle', (req, res) => {
+router.get('/api/getArticle/', async(req, res) => {
   const _id = req.query.id;
-  db.Article.findOne({_id}, (err, data) => {
-    if (err) console.log(err);
-    res.status(200).send(data);
+  await db.Article.findOne({_id}, {__v: 0}, (err, data) => {
+    if (err) res.status(500).send({msg: '系统错误', code: -1});
+    res.status(200).send({
+      code: 1,
+      mag: '获取文章详情成功',
+      result: data
+    });
   });
 });
 
 // 文章列表
-router.get('/api/getArticles', (req, res) => {
+router.get('/api/getArticles', async(req, res) => {
   let limitObj = {
     limitNum: parseInt(req.query.pagesize), // 转换成int
     limitPage: parseInt(req.query.pagenum)
   };
   // 第一个 {} 放 where 条件，为空表示返回集合中所有文档。
   // 第二个 {} 指定那些列显示和不显示 （0表示不显示 1表示显示)。
-  db.Article.find({}, {'title': 1, 'date': 1, 'content': 1, _id: 0}, (err, data) => {
+  // MongoDB执行顺序: sort skip limit
+  await db.Article.find({}, {__v: 0}, (err, data) => {
     if (err) {
       // console.log(err)
       res.status(500).send({
@@ -84,26 +93,29 @@ router.get('/api/getArticles', (req, res) => {
         result: data
       });
     }
-  }).sort({time: -1}).limit(limitObj.limitNum);
+  }).sort({_id: -1}).limit(limitObj.limitNum);
 });
 
 //保存文章
-router.post('/api/saveArticle', (req, res) => {
+router.post('/api/saveArticle', async(req, res) => {
+  let {id, username, viewAuth, title, date, content} = req.body;
   const article = {
-    id: req.query.id || '',
-    title: req.body.title,
+    id: id || '',
+    username: username,
+    viewAuth: viewAuth,
+    title: title,
     // date: (new Date()).getTime(),
-    date: req.body.date,
-    content: req.body.content
+    date: date,
+    content: content
   };
   let tipMsg = '';
   if (article.id) {
     //更新文章
-    db.Article.findByIdAndUpdate(article.id, article, fn);
+    await db.Article.findByIdAndUpdate(article.id, article, fn);
     tipMsg = '更新成功';
   } else {
     //新建文章
-    new db.Article(article).save();
+    await new db.Article(article).save();
     tipMsg = '发布成功'
   }
   res.status(200).send({
@@ -113,8 +125,8 @@ router.post('/api/saveArticle', (req, res) => {
 });
 
 //删除文章
-router.post('/api/deleteArticle', (req, res) => {
-  db.Article.findByIdAndRemove(req.params.id, fn)
+router.post('/api/deleteArticle', async(req, res) => {
+  await db.Article.findByIdAndRemove(req.params.id, fn);
   res.status(200).send({
     msg: '保存成功',
     code: 1
@@ -122,9 +134,9 @@ router.post('/api/deleteArticle', (req, res) => {
 });
 
 // login
-router.post('/api/signin', (req, res) => {
+router.post('/api/signin', async(req, res) => {
   const {name, pwd} = req.body;
-  db.User.findOne({name}, 'name pwd ', (err, data) => {
+  await db.User.findOne({name}, 'name pwd ', (err, data) => {
     switch (true) {
       case !!err:
         res.status(500).send({
@@ -156,12 +168,12 @@ router.post('/api/signin', (req, res) => {
 });
 
 //register
-router.post('/api/signup', (req, res) => {
+router.post('/api/signup', async(req, res) => {
   let newUser = {
     name: req.body.name,
     pwd: req.body.pwd,
   };
-  db.User.findOne({'name': newUser.name}, (err, user) => {
+  await db.User.findOne({'name': newUser.name}, (err, user) => {
     if (err) {
       res.status(500).send({code: -1, msg: '未知错误'});
     } else {
@@ -176,9 +188,9 @@ router.post('/api/signup', (req, res) => {
 });
 
 //修改密码
-router.post('/api/savePwd', (req, res) => {
+router.post('/api/savePwd', async(req, res) => {
   const {name, pwd} = req.body;
-  db.User.findOneAndUpdate({name}, {pwd}, fn);
+  await db.User.findOneAndUpdate({name}, {pwd}, fn);
   res.status(200).send({
     msg: '密码修改成功',
     code: 1

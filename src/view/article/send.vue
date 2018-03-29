@@ -16,7 +16,7 @@
                        multiLine :rows="10" :maxLength="500" required/>
       </div>
       <div class="from-item">
-        <mu-select-field v-model="viewPermissions" label="谁可以看">
+        <mu-select-field v-model="viewAuth" label="谁可以看">
           <mu-menu-item value="1" title="所有人可见"/>
           <mu-menu-item value="2" title="好友可见"/>
           <mu-menu-item value="3" title="自己可见"/>
@@ -29,15 +29,15 @@
 <script>
   import {mapActions} from 'vuex'
   import utils from '../../common/utils'
+  import auth from '../../common/auth'
 
   export default {
     data() {
       return {
-        input: '',
         inputErrorText: '',
         multiLineInput: '',
         multiLineInputErrorText: '',
-        viewPermissions: '1',
+        viewAuth: '1',
         toastOpt: {
           isShow: true,
           message: ''
@@ -51,7 +51,6 @@
     },
     mounted() {
       const self = this;
-      // self.getDetailData();
       self.setTitle('记录中...');
     },
     methods: {
@@ -68,12 +67,15 @@
       ]),
       sendArticle() {
         const self = this;
+        let username = JSON.parse(auth.getUserInfo()).name;
         let article = {
+          username: username,
+          viewAuth: self.viewAuth,
           title: self.article.title,
           content: self.article.content,
           date: utils.formatDate(new Date())
         };
-        if (!self.article.content) {
+        if (!article.content) {
           self.toastOpt.message = '请填写内容';
           self.showToast(self.toastOpt);
         } else {
@@ -84,7 +86,7 @@
               self.showToast(self.toastOpt);
             } else {
               this.$router.push({
-                path: '/'
+                path: '/index'
               })
             }
           }).catch(e => {
@@ -103,5 +105,10 @@
 </script>
 
 <style lang="scss" scoped>
+  .send-container {
+    .send-from {
+      padding: 1rem 2rem 0 2rem;
+    }
+  }
 
 </style>

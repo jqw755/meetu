@@ -1,7 +1,6 @@
 function socket(server) {
   const io = require('socket.io')(server);
-  const _ = require('underscore'); // nodejs扩展
-  var hashName = new Array();
+  // let hashName = Array();
   /*
    * 不推荐使用全局user数组维护用户, 实现私聊, 用户量过大,会导致遍历数组变慢
    * socket有id属性, 可以通过这个实现点对点通信
@@ -9,19 +8,21 @@ function socket(server) {
   io.on('connection', function (socket) {  // 接收socket参数
 
     socket.on('join', function (data) {
-      var name = data;
-      hashName[name] = socket.id;
+      socket.name = data.name;
     });
 
-    socket.on('sayTo',function (data) {
-      var toName = data.to;
-      var toId;
-      if(toId = hashName[toName]){
-        var toSocket = _.findWhere(io.sockets.sockets,{id:toId});
-        toSocket.emit('message',data.msg);
-        console.log(4)
+    socket.on('sayTo', function (data) {
+      let toName = data.to;
+      let clients = io.sockets.sockets;
+      for ( let client in clients){
+        if(!clients[client]){
+          console.log('用户不在线')
+        }
+        if( clients[client].name === toName ){
+          clients[client].emit('message', data);
+        }
       }
-    })
+    });
 
     socket.on('quit', function (obj) {
       return

@@ -17,7 +17,7 @@
       </div>
       <div class="form-content">
         <p class="input-wrap">
-          <input type="text" placeholder="请输入您注册的邮箱或手机号" class="ipt account" v-model="userInfo.account"
+          <input type="text" placeholder="请输入用户名" class="ipt account" v-model="userInfo.account"
                  @input="accountEvt">
         </p>
         <div class="input-wrap">

@@ -1,9 +1,9 @@
 <template>
   <section>
     <!--<mobile-tear-sheet>-->
-    <mu-list>
+    <mu-list >
       <mu-sub-header>今天</mu-sub-header>
-      <mu-list-item title="这个周末一起吃饭么?">
+      <mu-list-item title="这个周末一起吃饭么?" :to="`/chatting?id=${to}`">
         <mu-avatar src="/images/avatar1.jpg" slot="leftAvatar"/>
         <span slot="describe">
           <span style="color: rgba(0, 0, 0, .87)">Myron Liu -</span>
@@ -31,30 +31,14 @@
   export default {
     data() {
       return {
-        bottomNav: 'message'
+        bottomNav: 'message',
+        me: '', // 自己
+        to: 'robot', // 要聊天的用户
       }
     },
     mounted() {
-      console.log(6)
-      let socket = io.connect('http://localhost:3000');
-      socket.emit('join', function (data) {
-        data.name = 'jqw'
-        console.log(3)
-      });
-      socket.emit('sayTo', function (data) {
-        data = {
-          to: 'jqw',
-          msg: '12121212'
-        }
-        console.log(2)
-      });
-      // 监听私聊消息
-      socket.on('pMsg', function (data) {
+      const self = this;
 
-      });
-      socket.on('message',function (data) {
-        console.log(1);
-      });
     },
     components: {
       globalFooter

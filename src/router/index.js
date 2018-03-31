@@ -11,6 +11,7 @@ import articleSend from '../view/article/send'
 import login from '../view/login/login'
 import signup from '../view/login/signup'
 import chat from '../view/chat/chat'
+import chatting from '../view/chat/chatting'
 import customer from '../view/customer/customer'
 
 Vue.use(Router);
@@ -60,6 +61,16 @@ const router = new Router({
       meta: {
         requireAuth: true,
       },
+      children: [
+
+      ]
+    },
+    {
+      path: '/chatting',
+      component: chatting,
+      meta: {
+        requireAuth: true,
+      }
     }
   ]
 });

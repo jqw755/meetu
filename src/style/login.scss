@@ -1,21 +1,35 @@
 .login-wrap,
-.signup-wrap{
+.signup-wrap {
   height: 100%;
   background: #fff;
   .login-content,
-  .signup-content{
+  .signup-content {
     padding: 0 3rem;
     .head {
-      font-size: 1.6rem;
-      text-align: center;
+      //font-size: 1.6rem;
+      //text-align: center;
       padding: 3rem 0 3rem 0;
-      .login-default,
-      .signup-default{
-        width: 1.5rem;
-        height: 1.5rem;
-        margin: 0 auto;
-        img {
-          width: 100%;
+      .signup-avatar {
+        .upload-avatar,
+        .default-avatar {
+          display: block;
+          width: 8rem;
+          height: 8rem;
+          border-radius: 50%;
+          border: 1px solid #999;
+          background-size: 8rem 8rem;
+          margin: 0 auto;
+          img {
+            width: 100%;
+          }
+        }
+        .default-avatar {
+          background: url("../../assets/public/me.png") no-repeat;
+          background-size: 8rem 8rem;
+        }
+        .avatar {
+          //visibility: hidden;
+          display: none;
         }
       }
       .title {
@@ -26,7 +40,7 @@
       .input-wrap {
         font-size: 1.4rem;
         position: relative;
-        &:last-child{
+        &:last-child {
           border-bottom: 0;
         }
         //height: 1.7rem;
@@ -56,7 +70,7 @@
           width: 79%;
         }
         .login-btn,
-        .signup-btn{
+        .signup-btn {
           text-align: center;
           display: inline-block;
           text-decoration: none;
@@ -73,12 +87,12 @@
           }
         }
       }
-      .action-account{
+      .action-account {
         margin-top: 2rem;
-        a{
+        a {
           color: #03c5ff;
         }
-        .ro-find-pwd{
+        .ro-find-pwd {
           float: right;
         }
       }

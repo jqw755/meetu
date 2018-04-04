@@ -10,15 +10,22 @@ const Schema = mongoose.Schema;
 //创建用到的实例
 module.exports = {
   userSchema: new Schema({
+    // uuid: {
+    //   type: Number,
+    //   // required: true,
+    //   // unique: true
+    // },
     name: {
       type: String,
-      required: true,
-      unique: true
+      required: true
     },
     pwd: {
       type: String,
       required: true
     },
+    avatar: {
+      type: String
+    }
   }),
 
   articleSchema: new Schema({
@@ -27,8 +34,7 @@ module.exports = {
       required: true
     },
     viewAuth: {
-      default: '1',
-      type: String,
+      type: Number,
       required: true
     },
     title: {
@@ -44,7 +50,7 @@ module.exports = {
       required: true
     }
   })
-}
+};
 
 // export default new Schema({
 //   userSchema: {

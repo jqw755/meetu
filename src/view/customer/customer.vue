@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="customer-wrap">
     <!-- 事件轴 -->
     <mu-timeline>
       <mu-timeline-item>
@@ -28,6 +28,8 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .customer-wrap{
+    padding-bottom: 5.6rem;
+  }
 </style>

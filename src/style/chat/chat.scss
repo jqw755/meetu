@@ -1,0 +1,69 @@
+.chatting-wrap {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  position: relative;
+  background: #f6f6f6;
+  // 聊天框容器
+  .dialogue-wrap {
+    width: 100%;
+    //height: 100%;
+    //min-height: 100%;
+    padding-bottom: 6rem;
+    background: #f6f6f6;
+      // 对话条
+    .dialogue-item {
+      width: 100%;
+      margin: 1rem 0;
+      // 对话内容
+      .dialog-content {
+        display: inline-block;
+        max-width: 70%;
+        word-wrap: break-word;
+        font-size: 1.3rem;
+        color: #000;
+        //letter-spacing: 0.11rem;
+        padding: 0.6rem 1rem;
+        background: #fff;
+        border-radius: 0.8rem;
+      }
+      // 说话的人
+      .dialog-user {
+        //float: left;
+      }
+    }
+    // 自己说话
+    .my-self {
+      .dialog-content {
+        float: right;
+        background: darkorange;
+        color: #fff;
+      }
+      .dialog-user {
+        float: right;
+      }
+    }
+  }
+
+  .msg-action {
+    width: 100%;
+    background: #f6f6f6;
+    border-top: 1px solid #ececec;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    .action-wrap {
+      width: 96%;
+      margin-left: 3.5%;
+      .msg-input {
+        width: 70%;
+        float: left;
+      }
+      .msg-btn {
+        width: 15%;
+        float: left;
+      }
+    }
+
+  }
+}

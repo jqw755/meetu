@@ -15,7 +15,7 @@ const Models = {
 };
 
 const initialize = function () {
-  Models.User.find(null, function (err, data) {
+  Models.Article.find(null, function (err, data) {
     if (err) {
       console.log(err)
     } else if (!data.length) {

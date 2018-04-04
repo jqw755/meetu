@@ -106,7 +106,7 @@
 
 <style lang="scss" scoped>
   .index-container {
-    height: 100%;
+    padding-bottom: 5.6rem;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     position: relative;

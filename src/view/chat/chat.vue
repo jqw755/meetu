@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="chat-wrap">
     <!--<mobile-tear-sheet>-->
     <mu-list >
       <mu-sub-header>今天</mu-sub-header>
@@ -46,6 +46,8 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .chat-wrap{
+    padding-bottom: 5.6rem;
+  }
 </style>

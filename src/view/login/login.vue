@@ -8,11 +8,6 @@
     </div>
     <div class="login-content">
       <div class="head">
-        <p class="login-default">
-          <router-link to="/">
-            <!--<img src="../image/public/logo-default.png" alt="">-->
-          </router-link>
-        </p>
         <p class="title">登录</p>
       </div>
       <div class="form-content">

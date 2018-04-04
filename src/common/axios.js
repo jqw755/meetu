@@ -66,16 +66,23 @@ function checkCode(res) {
   return res;
 }
 
-function post(url, data) {
+function post(url, data, header) {
+  let headers = {};
+  if (!header) {
+    headers = {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/json; charset=UTF-8;'  //multipart/form-data;
+    }
+  }else{
+    headers = header
+  }
+
   return axios({
     method: 'post',
     url: getConfig().baseUrl + url,
     data: JSON.stringify(data),
     timeout: 10000,
-    headers: {
-      'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'application/json; charset=UTF-8'
-    }
+    headers: headers
   }).then((response) => {
       return checkStatus(response)
     }

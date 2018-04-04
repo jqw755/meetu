@@ -6,19 +6,11 @@
 // const fs = require('fs');
 // const path = require('path')
 // const resolve = file => path.resolve(__dirname, file)
-const express = require('express');
-// const Model = require('./dbModel');
-const api = require('./api');
-// bodyParser 必须放在api后面,否则请求req.body会报undefined
-const bodyParser = require('body-parser');
-const app = express();
-
-// 用于静态展示入口
-let router = express.Router();
-router.get('/', function (req, res, next) {
-  req.url = '../index.html';
-  next();
-});
+const express = require('express'),
+  api = require('./api'),
+  // bodyParser 必须放在api后面,否则请求req.body会报undefined
+  bodyParser = require('body-parser'),
+  app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -27,10 +19,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.all('*', function(req, res, next) {
   app.use(api);
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+  // res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+  // res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
   res.header("Content-Type", "application/json;charset=utf-8");
-  if(req.method==="OPTIONS") res.sendStatus(200); // 让options请求快速返回
+  if(req.method=="OPTIONS") res.sendStatus(200);/*让options请求快速返回*/
   else  next();
 });
 
@@ -40,6 +32,7 @@ let appPort = app.get('port');
 let server = app.listen(appPort, function () {
   console.log('application run at: http://localhost:' + appPort);
 });
+
 // webSocket
-require('./socket.js')(server);
+let socket = require('./socket.js')(server);
 

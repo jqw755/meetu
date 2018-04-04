@@ -45,6 +45,8 @@
 
 <style lang="scss" scoped>
   #app {
-    padding-bottom: 5.6rem;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
   }
 </style>

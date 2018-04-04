@@ -3,25 +3,26 @@
     <div class="signup-header">
       <mu-appbar title="">
         <mu-icon-button icon="keyboard_arrow_left" slot="left" to="/login"/>
-        <!--<mu-flat-button label="欢迎注册" solt="default"/>-->
+        <mu-flat-button label="注册" solt="default"/>
       </mu-appbar>
     </div>
     <div class="signup-content">
       <div class="head">
-        <p class="signup-default">
-          <router-link to="/">
-            <!--<img src="../image/public/logo_default.png" alt="">-->
-          </router-link>
-        </p>
-        <p class="title">注册</p>
+        <div class="signup-avatar">
+          <img :src="userInfo.uploadAvatar" alt="选择头像" class="upload-avatar" v-if="userInfo.uploadAvatar">
+          <p class="default-avatar" @click="emitChoose" v-else></p>
+            <input type="file" name="avatar" class="avatar" id="avatar" @change="chooseAvatar">
+            <input type="submit" class="avatar" id="avatarSubmit">
+        </div>
+        <!--<p class="title">注册</p>-->
       </div>
       <div class="form-content">
         <p class="input-wrap">
-          <input type="text" placeholder="起一个好名字吧" class="ipt account" v-model="userInfo.account"
+          <input type="text" placeholder="请输入用户名" class="ipt account" v-model="userInfo.name"
                  @input="accountEvt">
         </p>
         <div class="input-wrap">
-          <input :type="pwdType" placeholder="密码" class="ipt pwd" v-model="userInfo.pwd" @input="pwdEvt">
+          <input :type="pwdType" placeholder="请输入密码" class="ipt pwd" v-model="userInfo.pwd" @input="pwdEvt">
           <p class="showPwd" @click="eyeShow">
             <img src="../../assets/public/eye-close.png" alt="" v-show="!showPassword">
             <img src="../../assets/public/eye-show.png" alt="" v-show="showPassword">
@@ -50,7 +51,8 @@
         isDisabled: true,
         showPassword: false,
         userInfo: {
-          account: '',
+          uploadAvatar: "",
+          name: '',
           pwd: ''
         },
         noticeOptions: {},
@@ -73,9 +75,17 @@
         'showToast',
         'setTitle',
       ]),
+      emitChoose() {
+        document.getElementById('avatar').click();
+      },
+      chooseAvatar(e) {
+        let files = e.target.files || e.dataTransfer.files;
+        if (!files.length) return;
+        this.userInfo.uploadAvatar = files[0];
+      },
       accountEvt() {
         const self = this;
-        if (self.userInfo.account.length > 0 && self.userInfo.pwd.length > 0) {
+        if (self.userInfo.name.length > 0 && self.userInfo.pwd.length > 0) {
           self.isDisabled = false;
         } else {
           self.isDisabled = true;
@@ -83,7 +93,7 @@
       },
       pwdEvt() {
         const self = this;
-        if (self.userInfo.account.length > 0 && self.userInfo.pwd.length > 0) {
+        if (self.userInfo.name.length > 0 && self.userInfo.pwd.length > 0) {
           self.isDisabled = false;
         } else {
           self.isDisabled = true;
@@ -101,25 +111,27 @@
       },
       signupEvt() {
         const self = this;
-        if (!self.userInfo.account.length > 0) {
+        if (!self.userInfo.name.length > 0) {
           self.toastOpt.message = '还没有输入名称哦';
           self.showToast(self.toastOpt);
         } else if (!self.userInfo.pwd.length > 0) {
           self.toastOpt.message = '别忘记输入密码';
           self.showToast(self.toastOpt);
         } else {
-          let username = self.userInfo.account,
-            password = self.userInfo.pwd;
+          document.getElementById('avatarSubmit').click();
+          let username = self.userInfo.name,
+            pwd = self.userInfo.pwd;
           self.$api.post('/api/signup', {
             name: username,
-            pwd: password,
+            pwd: pwd,
+            avatar: ''
           }).then((res) => {
             const data = res.data;
             if (!data.code > 0) {
               self.toastOpt.message = data.msg;
               self.showToast(self.toastOpt);
             } else {
-              if(data.code === 1){
+              if (data.code === 1) {
                 //注册成功，转去登录
                 self.toastOpt.message = data.msg;
                 self.showToast(self.toastOpt);
@@ -141,8 +153,7 @@
         }
       }
     },
-    computed: {
-    },
+    computed: {},
     components: {}
   }
 </script>

@@ -16,12 +16,20 @@
  *
  * */
 
-const express = require('express');
-const app = express();
-const router = express.Router();
+const express = require('express'),
+  app = express(),
+  router = express.Router(),
+  path = require('path'),
+  fs = require('fs'),
+  multer = require('multer');
+
+let upload = multer({
+  dest: './uploads'
+});//定义图片上传的临时目录
+
 
 // 使用jwt签名
-var jwt = require('jsonwebtoken');
+let jwt = require('jsonwebtoken');
 const db = require('./dbModel');
 const fn = () => {
 };
@@ -57,7 +65,7 @@ const fn = () => {
 // });
 
 // 文章详情
-router.get('/api/getArticle/', async(req, res) => {
+router.get('/api/getArticle/', async (req, res) => {
   const _id = req.query.id;
   await db.Article.findOne({_id}, {__v: 0}, (err, data) => {
     if (err) res.status(500).send({msg: '系统错误', code: -1});
@@ -70,7 +78,7 @@ router.get('/api/getArticle/', async(req, res) => {
 });
 
 // 文章列表
-router.get('/api/getArticles', async(req, res) => {
+router.get('/api/getArticles', async (req, res) => {
   let limitObj = {
     limitNum: parseInt(req.query.pagesize), // 转换成int
     limitPage: parseInt(req.query.pagenum)
@@ -86,7 +94,6 @@ router.get('/api/getArticles', async(req, res) => {
         code: -1
       });
     } else {
-      // res.send(data);
       res.status(200).send({
         code: 1,
         mag: '获取文章列表成功',
@@ -97,7 +104,7 @@ router.get('/api/getArticles', async(req, res) => {
 });
 
 //保存文章
-router.post('/api/saveArticle', async(req, res) => {
+router.post('/api/saveArticle', async (req, res) => {
   let {id, username, viewAuth, title, date, content} = req.body;
   const article = {
     id: id || '',
@@ -125,16 +132,18 @@ router.post('/api/saveArticle', async(req, res) => {
 });
 
 //删除文章
-router.post('/api/deleteArticle', async(req, res) => {
-  await db.Article.findByIdAndRemove(req.params.id, fn);
-  res.status(200).send({
-    msg: '保存成功',
-    code: 1
+router.post('/api/deleteArticle', async (req, res) => {
+  await db.Article.findByIdAndRemove(req.params.id, () => {
+    res.status(200).send({
+      msg: '保存成功',
+      code: 1
+    });
   });
+
 });
 
 // login
-router.post('/api/signin', async(req, res) => {
+router.post('/api/signin', async (req, res) => {
   const {name, pwd} = req.body;
   await db.User.findOne({name}, 'name pwd ', (err, data) => {
     switch (true) {
@@ -168,10 +177,12 @@ router.post('/api/signin', async(req, res) => {
 });
 
 //register
-router.post('/api/signup', async(req, res) => {
+router.post('/api/signup', async (req, res) => {
   let newUser = {
+    // uuid: 0,
     name: req.body.name,
     pwd: req.body.pwd,
+    avatar: ''
   };
   await db.User.findOne({'name': newUser.name}, (err, user) => {
     if (err) {
@@ -180,20 +191,36 @@ router.post('/api/signup', async(req, res) => {
       if (user && user.name) {
         res.send({code: 0, msg: '名称存在咯，换一个吧'});
       } else {
-        new db.User(newUser).save();
-        res.send({code: 1, msg: '注册成功，带您去登陆 >v<'});
+        // newUser.uuid = parseInt(db.User.count()) + 1;
+        new db.User(newUser).save(() => {
+          res.send({code: 1, msg: '注册成功，带您去登陆 >v<'});
+        });
       }
     }
   });
 });
 
+// 上传头衔
+router.post('/api/avatar', upload.single('avatar'), async (req, res) => {
+// 图片会放在uploads目录并且没有后缀，需要自己转存，用到fs模块
+  // 对临时文件转存，fs.rename(oldPath, newPath,callback);
+  fs.rename(req.files.path, "upload/" + req.files.originalname, function(err, data) {
+    if (err) {
+      throw err;
+    }
+    console.log(data);
+  })
+
+});
+
 //修改密码
-router.post('/api/savePwd', async(req, res) => {
+router.post('/api/savePwd', async (req, res) => {
   const {name, pwd} = req.body;
-  await db.User.findOneAndUpdate({name}, {pwd}, fn);
-  res.status(200).send({
-    msg: '密码修改成功',
-    code: 1
+  await db.User.findOneAndUpdate({name}, {pwd}, () => {
+    res.status(200).send({
+      msg: '密码修改成功',
+      code: 1
+    });
   });
 });
 

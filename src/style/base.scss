@@ -10,9 +10,16 @@ html, body {
   width: 100%;
   max-width: 750px;
   height: 100%;
+  min-height: 100%;
   margin: 0 auto;
   /* base iphone6 */
   font: 10px 'PingFang SC', 'Helvetica Neue', Helvetica, 'Hiragino Sans GB', STHeitiSC-Light, 'Microsoft YaHei', Arial, sans-serif;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  &scrollbar {
+    display: none;
+  }
 }
 
 .clear-fix {

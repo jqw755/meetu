@@ -1,7 +1,7 @@
 # meetu
 
 > meet you webApp:
-> node.js + MongoDB + express + vue2 + axios + vuex
+> vue2 + koa2 + MongoDB + axios + vuex
 
 ## Build Setup
 

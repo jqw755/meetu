@@ -8,7 +8,7 @@
     </div>
     <div class="login-content">
       <div class="head">
-        <p class="title">登录</p>
+        <!--<p class="title">登录</p>-->
       </div>
       <div class="form-content">
         <p class="input-wrap">

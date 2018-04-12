@@ -45,7 +45,7 @@
       const self = this;
       let me = self.dialogObj.me = JSON.parse(auth.getUserInfo()).name;
       self.dialogObj.to = utils.getQuery('id');
-      let socket = io.connect('http://localhost:3000');
+      let socket = io.connect('http://localhost:3001');
       self.dialogObj.socket = socket;
       // 在线
       socket.emit('online', {

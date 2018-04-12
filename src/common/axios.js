@@ -3,11 +3,11 @@ import store from '../store/index'
 // 导入API URL
 import {getConfig} from '../common/config'
 
-let token = localStorage.getItem('MEET_TOKEN');
 //请求拦截
 axios.interceptors.request.use(config => {
   // loading
   store.commit('LOADING', true);
+  let token = localStorage.getItem('MEET_TOKEN');
   if (token) {
     // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
     config.headers.Authorization = token;
@@ -71,7 +71,7 @@ function post(url, data, header) {
   if (!header) {
     headers = {
       'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'application/json; charset=UTF-8;'  //multipart/form-data;
+      'Content-Type': 'application/json; charset=UTF-8'  //multipart/form-data;
     }
   }else{
     headers = header
@@ -82,7 +82,10 @@ function post(url, data, header) {
     url: getConfig().baseUrl + url,
     data: JSON.stringify(data),
     timeout: 10000,
-    headers: headers
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/json; charset=UTF-8'  //multipart/form-data;
+    }
   }).then((response) => {
       return checkStatus(response)
     }

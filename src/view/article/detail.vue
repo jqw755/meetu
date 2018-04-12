@@ -59,7 +59,7 @@
       getDetailData() {
         const self = this;
         let articleId = self.$route.params.id;
-        self.$api.get('/api/getArticle', {'id': articleId}, true).then((res) => {
+        self.$api.get('/api/article/articleDetail', {'id': articleId}, true).then((res) => {
           const data = res.data;
           // 所有code<0的操作,在axios.js中的检查状态码中都已经定义了, 日后更改这个一部分
           if (!data.code > 0) {

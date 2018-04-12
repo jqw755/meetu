@@ -18,11 +18,11 @@
       </div>
       <div class="form-content">
         <p class="input-wrap">
-          <input type="text" placeholder="请输入用户名" class="ipt account" v-model="userInfo.name"
+          <input type="text" name="name" placeholder="请输入用户名" class="ipt account" v-model="userInfo.name"
                  @input="accountEvt">
         </p>
         <div class="input-wrap">
-          <input :type="pwdType" placeholder="请输入密码" class="ipt pwd" v-model="userInfo.pwd" @input="pwdEvt">
+          <input :type="pwdType" name="pwd" placeholder="请输入密码" class="ipt pwd" v-model="userInfo.pwd" @input="pwdEvt">
           <p class="showPwd" @click="eyeShow">
             <img src="../../assets/public/eye-close.png" alt="" v-show="!showPassword">
             <img src="../../assets/public/eye-show.png" alt="" v-show="showPassword">
@@ -121,7 +121,7 @@
           document.getElementById('avatarSubmit').click();
           let username = self.userInfo.name,
             pwd = self.userInfo.pwd;
-          self.$api.post('/api/signup', {
+          self.$api.post('/api/user/register', {
             name: username,
             pwd: pwd,
             avatar: ''

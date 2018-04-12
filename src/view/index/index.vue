@@ -65,7 +65,7 @@
       ]),
       getIndexData(pageNum, pageSize) {
         const self = this;
-        self.$api.get('/api/getArticles', {'pagenum': pageNum, 'pagesize': pageSize}, true).then((res) => {
+        self.$api.get('/api/article/getArticles', {'pagenum': pageNum, 'pagesize': pageSize}, true).then((res) => {
           const data = res.data;
           if (!data.code > 0) {
             self.toastOpt.message = data.msg;

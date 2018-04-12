@@ -1,38 +1,28 @@
 /**
- * Created by jingqw on 18/3/12.
+ * Created by jingqw on 18/04/10.
  *
  * server entry js
  */
-// const fs = require('fs');
-// const path = require('path')
-// const resolve = file => path.resolve(__dirname, file)
-const express = require('express'),
-  api = require('./api'),
-  // bodyParser 必须放在api后面,否则请求req.body会报undefined
-  bodyParser = require('body-parser'),
-  app = express();
+const Koa = require('koa');
+const koaBody = require('koa-body');
+const cors = require('koa2-cors');
+const routers = require('./router/index');
+require('./db/connect');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+const app = new Koa();
 
-// 设置允许跨域  另一种办法是使用express的cors模块
-app.all('*', function(req, res, next) {
-  app.use(api);
-  res.header("Access-Control-Allow-Origin", "*");
-  // res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-  // res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-  res.header("Content-Type", "application/json;charset=utf-8");
-  if(req.method=="OPTIONS") res.sendStatus(200);/*让options请求快速返回*/
-  else  next();
-});
+// 设置允许跨域
+app.use(cors());
+
+// 解析ctx.request.body
+app.use(koaBody({multipart: true}));
+
+app.use(routers.routes()).use(routers.allowedMethods());
 
 // port
-app.set('port', (process.env.port || 3000));
-let appPort = app.get('port');
-let server = app.listen(appPort, function () {
-  console.log('application run at: http://localhost:' + appPort);
+let server = app.listen(process.env.PORT || 3001, function () {
+  console.log('application run at: http://localhost:' + 3001);
 });
-
 // webSocket
-let socket = require('./socket.js')(server);
+require('./socket.js')(server);
 

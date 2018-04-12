@@ -8,7 +8,7 @@
     </div>
     <div class="send-from">
       <div class="from-item">
-        <mu-text-field fullWidth hintText="标题（可以不写哦）" v-model="article.title" :errorText="inputErrorText"
+        <mu-text-field fullWidth hintText="标题（选填）" v-model="article.title" :errorText="inputErrorText"
                        @textOverflow="handleInputOverflow"
                        :maxLength="100"/>
         <mu-text-field fullWidth hintText="记录这一刻..." v-model="article.content" :errorText="multiLineInputErrorText"
@@ -69,17 +69,17 @@
         const self = this;
         let username = JSON.parse(auth.getUserInfo()).name;
         let article = {
-          username: username,
+          author: username,
           viewAuth: self.viewAuth,
           title: self.article.title,
           content: self.article.content,
-          date: utils.formatDate(new Date())
+          date: utils.formatDate(new Date(), 'yyyy-MM-dd hh:mm')
         };
         if (!article.content) {
           self.toastOpt.message = '请填写内容';
           self.showToast(self.toastOpt);
         } else {
-          self.$api.post('/api/saveArticle', {...article}).then((res) => {
+          self.$api.post('/api/article/saveArticle', {...article}).then((res) => {
             const data = res.data;
             if (data.code !== 1) {
               self.toastOpt.message = data.msg;

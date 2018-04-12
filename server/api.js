@@ -1,5 +1,5 @@
 /**
- * Created by jingqw on 18/3/12.
+ * Created by jingqw on 18/04/09.
  * apis
  */
 
@@ -16,16 +16,13 @@
  *
  * */
 
-const express = require('express'),
-  app = express(),
-  router = express.Router(),
+const Koa = require('koa'),
+  app = new Koa(),
+  router = require('koa-router')(),
   path = require('path'),
   fs = require('fs'),
-  multer = require('multer');
+  koaBody = require('koa-body');
 
-let upload = multer({
-  dest: './uploads'
-});//定义图片上传的临时目录
 
 
 // 使用jwt签名
@@ -200,18 +197,18 @@ router.post('/api/signup', async (req, res) => {
   });
 });
 
-// 上传头衔
-router.post('/api/avatar', upload.single('avatar'), async (req, res) => {
-// 图片会放在uploads目录并且没有后缀，需要自己转存，用到fs模块
-  // 对临时文件转存，fs.rename(oldPath, newPath,callback);
-  fs.rename(req.files.path, "upload/" + req.files.originalname, function(err, data) {
-    if (err) {
-      throw err;
-    }
-    console.log(data);
-  })
-
-});
+// 上传
+// router.post('/api/avatar', upload.single('avatar'), async (req, res) => {
+// // 图片会放在uploads目录并且没有后缀，需要自己转存，用到fs模块
+//   // 对临时文件转存，fs.rename(oldPath, newPath,callback);
+//   fs.rename(req.files.path, "upload/" + req.files.originalname, function (err, data) {
+//     if (err) {
+//       throw err;
+//     }
+//     console.log(data);
+//   })
+//
+// });
 
 //修改密码
 router.post('/api/savePwd', async (req, res) => {

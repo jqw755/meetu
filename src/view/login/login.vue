@@ -108,7 +108,7 @@
         } else {
           let username = self.userInfo.account,
             password = self.userInfo.pwd;
-          self.$api.post('/api/signin', {
+          self.$api.post('/api/user/login', {
             name: username,
             pwd: password,
           }).then((res) => {

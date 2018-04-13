@@ -32,12 +32,11 @@ const articleCtrl = {
   },
 
   // 保存文章
-  // 有BUG, 会执行两次保存命令, 这里先暂时解决一下, 因为没发现问题是啥, 后续看具体的
   async saveArticle(ctx, next) {
     let {viewAuth, title, date, content} = ctx.request.body;
     // 拿到由token解析出来的用户信息
     let {id} = ctx.apiUser;
-    console.log(1111)
+
     let authAuthor = await User.findById(id);
     let article = {
       author: authAuthor.name,
@@ -48,10 +47,7 @@ const articleCtrl = {
       date: date,
       content: content
     };
-    console.log(2222)
-    await new Article(article).save(()=>{
-      console.log(3333)
-    });
+    await new Article(article).save();
     ctx.status = 200;
     ctx.body = {
       mag: '发布成功',

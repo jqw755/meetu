@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const userCtrl = {
   // 注册
-  async register(ctx, next) {
+  async register(ctx) {
     let {name, pwd} = ctx.request.body;
     let newUser = {
       uid: 0,
@@ -43,8 +43,6 @@ const userCtrl = {
         msg: e.message || '系统错误'
       };
     }
-    await next();
-
   },
   // 登录
   async login(ctx) {

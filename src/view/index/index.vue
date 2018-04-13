@@ -6,7 +6,7 @@
     <div class="article-wrap">
       <div class="article-card" v-for="(article, index) in articles" :key="index">
         <mu-card>
-          <mu-card-header title="我的名字" :subTitle="article.date">
+          <mu-card-header :title='article.author' :subTitle="article.date">
             <mu-avatar src="../../assets/public/me.png" slot="avatar"/>
           </mu-card-header>
           <mu-card-media v-if="article.image">

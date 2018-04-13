@@ -29,7 +29,6 @@
 <script>
   import {mapActions} from 'vuex'
   import utils from '../../common/utils'
-  import auth from '../../common/auth'
 
   export default {
     data() {
@@ -67,9 +66,7 @@
       ]),
       sendArticle() {
         const self = this;
-        let username = JSON.parse(auth.getUserInfo()).name;
         let article = {
-          author: username,
           viewAuth: self.viewAuth,
           title: self.article.title,
           content: self.article.content,
@@ -92,7 +89,7 @@
           }).catch(e => {
             let options = {
               isShow: true,
-              message: e.msg || '数据获取出错,请重试',
+              message: e.msg || '请求出错,请重试',
               noCancel: true,
             };
             self.showNotice(options);

@@ -49,7 +49,7 @@ const router = new Router({
       component: signup
     },
     {
-      path: '/customer',
+      path: '/customer/:name',
       component: customer,
       meta: {
         requireAuth: true,

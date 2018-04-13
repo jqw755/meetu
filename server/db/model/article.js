@@ -11,6 +11,14 @@ const articleSchema = new Schema({
     type: String,
     required: true
   },
+  authorId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  avatar: {
+    type: String,
+    // required: true
+  },
   viewAuth: {
     type: Number,
     required: true,

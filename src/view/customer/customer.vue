@@ -1,6 +1,32 @@
 <template>
-  <section class="customer-wrap">
+  <section class="customer-container">
+    <div class="customer-wrap">
+      <div class="setting">设置</div>
+      <!--header-->
+      <div class="avatar">
+        <div class="avatar-bg">
+          <img src="../../assets/public/me.png" alt="">
+        </div>
+        <div class="avatar-img">
+          <img src="../../assets/public/me.png" alt="">
+          <p class="signature">{{personalInfo.name}}</p>
+        </div>
+      </div>
 
+      <div class="movements">
+        <div class="item" v-for="item in personalInfo.movements">
+          <div class="top">
+            <p v-if="0" v-for="img in item.images" class="article_wrap">
+              <img :src="img.src" alt="">
+            </p>
+            <!--<p class="title">{{item.title}}</p>-->
+            <p class="content">{{item.content}}</p>
+          </div>
+          <div class="date">{{item.date}}</div>
+        </div>
+      </div>
+
+    </div>
 
     <!--footer-->
     <globalFooter :changeBottomNav="bottomNav"></globalFooter>
@@ -8,12 +34,52 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
+  import utils from '../../common/utils'
+  import auth from '../../common/auth'
   import globalFooter from '../layout/footer'
 
   export default {
     data() {
       return {
-        bottomNav: 'person'
+        toastOpt: {
+          isShow: false,
+          message: ''
+        },
+        bottomNav: 'person',
+        // 个人动态
+        personalInfo: {
+          name: '',
+          movements: [],
+          comments: [],
+        },
+      }
+    },
+    mounted() {
+      const self = this;
+      self.personalInfo.name = JSON.parse(auth.getUserInfo()).name;
+      self.setTitle(self.personalInfo.name);
+      self.getPersonalData();
+    },
+    methods: {
+      ...mapActions(['showNotice', 'showToast', 'setTitle']),
+      getPersonalData() {
+        const self = this;
+        self.$api.get('/api/user/getUser', {}, true).then((res) => {
+          if (res.data.code !== 1) {
+            self.toastOpt.message = res.msg;
+            self.showToast(self.toastOpt);
+          } else {
+            self.personalInfo.movements = res.data.result;
+          }
+        }).catch(e => {
+          let options = {
+            isShow: true,
+            message: e.msg || '数据获取出错,请稍后重试',
+            noCancel: true,
+          };
+          self.showNotice(options);
+        })
       }
     },
     components: {
@@ -23,7 +89,5 @@
 </script>
 
 <style lang="scss" scoped>
-  .customer-wrap{
-    padding-bottom: 5.6rem;
-  }
+  @import "../../style/customer";
 </style>

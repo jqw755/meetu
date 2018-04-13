@@ -8,10 +8,10 @@ const Schema = mongoose.Schema;
 
 //创建用户实例
 const userSchema = new Schema({
-  uuid: {
+  uid: {
     type: Number,
     // required: true,
-    // unique: true
+    unique: true
   },
   name: {
     type: String,

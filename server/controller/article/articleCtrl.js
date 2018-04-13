@@ -1,4 +1,5 @@
 const Article = require('../../db/model/article');
+const User = require('../../db/model/user');
 
 const articleCtrl = {
   // 文章列表
@@ -11,7 +12,7 @@ const articleCtrl = {
     // 第一个 {} 放 where 条件，为空表示返回集合中所有文档。
     // 第二个 {} 指定那些列显示和不显示 （0表示不显示 1表示显示)。
     // MongoDB执行顺序: sort skip limit
-    await Article.find({}, {__v: 0}, (err, data) => {
+    await Article.find({}, {__v: 0, authorId: 0}, (err, data) => {
       if (err) {
         // console.log(err)
         ctx.status = 500;
@@ -28,43 +29,34 @@ const articleCtrl = {
         };
       }
     }).sort({_id: -1}).limit(limitObj.limitNum);
-    await next();
   },
 
   // 保存文章
+  // 有BUG, 会执行两次保存命令, 这里先暂时解决一下, 因为没发现问题是啥, 后续看具体的
   async saveArticle(ctx, next) {
-    let {id, author, viewAuth, title, date, content} = ctx.request.body;
+    let {viewAuth, title, date, content} = ctx.request.body;
+    // 拿到由token解析出来的用户信息
+    let {id} = ctx.apiUser;
+    console.log(1111)
+    let authAuthor = await User.findById(id);
     let article = {
-      id: id || '',
-      author: author,
+      author: authAuthor.name,
+      authorId: authAuthor._id,
+      avatar: authAuthor.avatar || ' none ',
       viewAuth: viewAuth,
       title: title,
-      // date: (new Date()).getTime(),
       date: date,
       content: content
     };
-    let tipMsg = '',
-      datas = '';
-    if (article.id) {
-      //更新文章
-      await Article.findByIdAndUpdate(article.id, article, (err, data) => {
-        tipMsg = '更新成功';
-        datas = data;
-      });
-    } else {
-      //新建文章
-      await new Article(article).save((err, data) => {
-        tipMsg = '发布成功';
-        datas = data;
-      });
-    }
+    console.log(2222)
+    await new Article(article).save(()=>{
+      console.log(3333)
+    });
     ctx.status = 200;
     ctx.body = {
-      mag: tipMsg,
-      code: 1,
-      result: datas
+      mag: '发布成功',
+      code: 1
     };
-    await next();
   },
 
   // 文章详情
@@ -74,7 +66,7 @@ const articleCtrl = {
       if (err) {
         ctx.status = 500;
         ctx.body = {msg: '系统错误', code: -1};
-      }else{
+      } else {
         ctx.status = 200;
         ctx.body = {
           code: 1,
@@ -83,7 +75,6 @@ const articleCtrl = {
         };
       }
     });
-    await next();
   },
 
 };

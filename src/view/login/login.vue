@@ -122,8 +122,6 @@
                   token: data.token,
                   avatar: data.avatar,
                   name: data.result.name,
-                  gender: data.gender,
-                  birthday: data.birthday
                 };
                 self.setUser(userInfos); // 存store
                 auth.setToken(userInfos.token); // 存本地

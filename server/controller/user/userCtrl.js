@@ -1,16 +1,13 @@
-/**
- *
- * */
-
 const User = require('../../db/model/user');
+const Article = require('../../db/model/article');
+const jwt = require('jsonwebtoken');
 
 const userCtrl = {
-
   // 注册
   async register(ctx, next) {
     let {name, pwd} = ctx.request.body;
     let newUser = {
-      // uuid: 0,
+      uid: 0,
       name: name,
       pwd: pwd,
     };
@@ -30,7 +27,7 @@ const userCtrl = {
               msg: '名称存在咯，换一个吧'
             };
           } else {
-            // newUser.uuid = parseInt(db.User.count()) + 1;
+            newUser.uid = User.count() + 1;
             new User(newUser).save();
             ctx.body = {
               code: 1,
@@ -49,10 +46,10 @@ const userCtrl = {
     await next();
 
   },
-
-  async login(ctx){
+  // 登录
+  async login(ctx) {
     const {name, pwd} = ctx.request.body;
-    await User.findOne({name}, 'name pwd ', (err, data) => {
+    await User.findOne({name}, 'name avatar', (err, data) => {
       switch (true) {
         case !!err:
           ctx.status = 500;
@@ -65,12 +62,12 @@ const userCtrl = {
           ctx.body = {code: 0, msg: '账号不存在'};
           break;
         case data.pwd === pwd:
-          // let token = jwt.sign({data}, 'app.get("superSecret")', {
-          //   expiresIn: 60 * 60 * 24 // 授权时效24小时
-          // });
+          let token = jwt.sign({id: data._id}, 'app.get(user)', {
+            expiresIn: '24h' // 授权时效24小时
+          });
           ctx.body = {
             message: '登陆成功',
-            // token: token,
+            token: token,
             code: 1,
             result: data
           };
@@ -82,6 +79,27 @@ const userCtrl = {
           ctx.body = {code: -1, msg: '未知错误'};
       }
     });
+  },
+  // 获取
+  async getUser(ctx) {
+    // 拿到由token解析出来的用户信息
+    let {id} = ctx.apiUser;
+    let authAuthor = await User.findById(id);
+    await Article.find({authorId: authAuthor._id}, {authorId: 0}, (err, data) => {
+      if (err) {
+        ctx.status = 500;
+        ctx.body = {
+          code: -1,
+          msg: '服务出错'
+        }
+      } else {
+        ctx.body = {
+          code: 1,
+          msg: '数据获取成功',
+          result: data
+        };
+      }
+    }).sort({_id: -1})
   },
 
 };

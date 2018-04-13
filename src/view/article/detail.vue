@@ -12,7 +12,7 @@
     <section class="detail-wrap">
       <div class="">
         <mu-card>
-          <mu-card-header :title="articleInfo.username" :subTitle="articleInfo.date">
+          <mu-card-header :title="articleInfo.author" :subTitle="articleInfo.date">
             <mu-avatar src="../../assets/public/me.png" slot="avatar"/>
           </mu-card-header>
           <mu-card-media v-if="articleInfo.image">
@@ -51,17 +51,13 @@
       self.getDetailData();
     },
     methods: {
-      ...mapActions([
-        'showNotice',
-        'showToast',
-        'setTitle',
-      ]),
+      ...mapActions(['showNotice', 'showToast', 'setTitle',]),
       getDetailData() {
         const self = this;
         let articleId = self.$route.params.id;
         self.$api.get('/api/article/articleDetail', {'id': articleId}, true).then((res) => {
           const data = res.data;
-          // 所有code<0的操作,在axios.js中的检查状态码中都已经定义了, 日后更改这个一部分
+          // 所有code<0的操作,在axios.js中的检查状态码中都已经定义了, 日后更改这一部分
           if (!data.code > 0) {
             self.toastOpt.message = data.msg;
             self.showToast(self.toastOpt);

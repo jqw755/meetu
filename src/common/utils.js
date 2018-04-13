@@ -120,33 +120,6 @@ export default {
     return time.substring(0, 2) + ':' + time.substring(2, 4) + (isShort ? '' : ':' + time.substring(4, 6));
   },
 
-// 根据后台返回时间毫秒数格式化xxxx-xx-xx
-//1.补0操作
-  getzf: function (num) {
-    if (parseInt(num) < 10) {
-      num = '0' + num;
-    }
-    return num;
-  }
-  ,
-// 2.得到年月日
-  getMyDate: function (str) {
-    let oDate = new Date(str),
-      oYear = oDate.getFullYear(),
-      oMonth = oDate.getMonth() + 1,
-      oDay = oDate.getDate(),
-      oHour = oDate.getHours(),
-      oMin = oDate.getMinutes(),
-      oSen = oDate.getSeconds(),
-      oTime = oYear + '-' + this.getzf(oMonth) + '-' + this.getzf(oDay);//最后拼接时间
-    return oTime;
-  }
-  ,
-// 3.调用
-  formatResTime: function (time) {
-    return this.getMyDate(time);
-  },
-
 // 活动倒计时
 // 格式化数字
   formatNumber: (n) => {

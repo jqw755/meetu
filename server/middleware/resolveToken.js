@@ -3,8 +3,9 @@ const jwt = require('jsonwebtoken');
 const verifyToken = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, 'app.get(user)', function (err, decoded) {
+      console.log({'err ': err})
       if (err) {
-        reject(-1);
+        reject({code: -1});
       } else {
         resolve(decoded);
       }
@@ -21,18 +22,18 @@ const resolveToken = async (ctx, next) => {
       await next();
     }
     catch (e) {
-      console.log(e)
+      console.log({'e ': e})
       if (e.code === -1) {
         ctx.status = 401;
         ctx.body = {
           code: -1,
-          msg: 'token过期'
+          msg: 'token过期, 请重新登录'
         }
       } else {
         ctx.status = 500;
         ctx.body = {
           code: -1,
-          msg: 'token校验失败'
+          msg: e
         }
       }
     }

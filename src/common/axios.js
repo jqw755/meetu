@@ -66,17 +66,7 @@ function checkCode(res) {
   return res;
 }
 
-function post(url, data, header) {
-  let headers = {};
-  if (!header) {
-    headers = {
-      'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'application/json; charset=UTF-8'  //multipart/form-data;
-    }
-  }else{
-    headers = header
-  }
-
+function post(url, data) {
   return axios({
     method: 'post',
     url: getConfig().baseUrl + url,
@@ -94,7 +84,7 @@ function post(url, data, header) {
   })
 }
 
-function get(url, params, uneedDefaultParams) {
+function get(url, params, uneedDefaultParams = true) {
   if (!uneedDefaultParams) {
     if (!params.pagenum) {
       params.pagenum = 1;

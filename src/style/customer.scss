@@ -1,70 +1,100 @@
 .customer-container {
   min-height: 100%;
   padding-bottom: 5.6rem;
-  background: #f9f9f9;
+  background: #f8f9fb;
   .customer-wrap {
-    .setting{
-      font-size: 1.2rem;
-      position: absolute;
-      right: 2rem;
-      top: 1.5rem;
-      z-index: 2;
-    }
-    .avatar{
+    .avatar {
       width: 100%;
       height: 22rem;
       overflow: hidden;
       background: #fff;
       border-bottom: 0.1rem solid #eee;
-      position: fixed;
-      top: 0;
-      left: 0;
-      .avatar-bg{
+      position: relative;
+      z-index: 2;
+      &.scrollActive {
+        position: fixed;
+        top: -16.5rem;
+        left: 0;
+      }
+      .setting {
+        font-size: 1.2rem;
+        position: absolute;
+        right: 2rem;
+        top: 1.5rem;
+        z-index: 2;
+      }
+      .avatar-bg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
         text-align: center;
-        img{
-          filter: blur(1.5rem);
+        z-index: 1;
+        img {
+          filter: blur(1.2rem);
         }
       }
-      .avatar-img{
+      .avatar-img {
         text-align: center;
         position: absolute;
         left: 50%;
         transform: translate(-50%, 0);
         top: 5rem;
-        img{
+        z-index: 2;
+        img {
           width: 6rem;
           height: 6rem;
           border: 0.1rem solid #999;
           border-radius: 50%;
         }
-        .signature{
+        .signature {
           padding: 1rem 0;
           font-size: 1.3rem;
         }
       }
     }
-    .movements{
-      padding: 24rem 5% 7rem 5%;
-      .item{
-        color: #000;
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
-        background: #fff;
-        border-radius: 0.6rem;
-        .top{
-          padding: 1.2rem 1rem;
+    .movements {
+      padding: 4rem 5% 7rem 8%;
+      .movements_wrap{
+        position: relative;
+        .timeLine {
+          width: 1px;
+          height: 100%;
+          background: rgba(150, 150, 150, 0.3);
+          position: absolute;
+          top: 0;
+          left: -1.5rem;
         }
-        .date{
-          color: #969696;
-          font-size: 1.1rem;
-          padding: 0 0 1rem 0;
-          &:before{
-            display: inline-block;
-            content: '';
-            width: 0.4rem;
-            height: 0.8rem;
-            background: orange;
-            margin-right: 0.6rem;
+        .item {
+          color: #353535;
+          font-size: 1.3rem;
+          margin-bottom: 1.5rem;
+          background: #fff;
+          border-radius: 0.6rem;
+          box-shadow: -1px 1px 3px rgba(150, 150, 150, 0.3);
+          position: relative;
+          //border-left: 1px solid #969696;
+          .top {
+            padding: 1.2rem 1rem;
+          }
+          .date {
+            color: #969696;
+            font-size: 1.1rem;
+            padding: 0 0 1rem 0.6rem;
+            position: relative;
+            &:before {
+              display: inline-block;
+              content: '';
+              width: 1rem;
+              height: 1rem;
+              background: orange;
+              border-radius: 50%;
+              box-shadow: -1px 2px 1px rgba(150, 150, 150, 0.3);
+              position: absolute;
+              left: -2rem;
+              top: 0.34rem;
+            }
           }
         }
       }

@@ -1,9 +1,9 @@
 <template>
   <section class="customer-container">
     <div class="customer-wrap">
-      <div class="setting">设置</div>
       <!--header-->
-      <div class="avatar">
+      <div :class="['avatar', {'scrollActive':avatarScrollActive}]">
+        <div class="setting">设置</div>
         <div class="avatar-bg">
           <img src="../../assets/public/me.png" alt="">
         </div>
@@ -14,15 +14,18 @@
       </div>
 
       <div class="movements">
-        <div class="item" v-for="item in personalInfo.movements">
-          <div class="top">
-            <p v-if="0" v-for="img in item.images" class="article_wrap">
-              <img :src="img.src" alt="">
-            </p>
-            <!--<p class="title">{{item.title}}</p>-->
-            <p class="content">{{item.content}}</p>
+        <div class="movements_wrap">
+          <div class="timeLine"></div>
+          <div class="item" v-for="item in personalInfo.movements">
+            <div class="top">
+              <p v-if="0" v-for="img in item.images" class="article_wrap">
+                <img :src="img.src" alt="">
+              </p>
+              <!--<p class="title">{{item.title}}</p>-->
+              <p class="content">{{item.content}}</p>
+            </div>
+            <div class="date">{{item.date}}</div>
           </div>
-          <div class="date">{{item.date}}</div>
         </div>
       </div>
 
@@ -47,6 +50,7 @@
           message: ''
         },
         bottomNav: 'person',
+        avatarScrollActive: false,
         // 个人动态
         personalInfo: {
           name: '',
@@ -59,7 +63,10 @@
       const self = this;
       self.personalInfo.name = JSON.parse(auth.getUserInfo()).name;
       self.setTitle(self.personalInfo.name);
+      // 获取数据
       self.getPersonalData();
+      // 监听滚动
+      document.body.addEventListener('scroll', self.handleScroll);
     },
     methods: {
       ...mapActions(['showNotice', 'showToast', 'setTitle']),
@@ -73,6 +80,7 @@
             self.personalInfo.movements = res.data.result;
           }
         }).catch(e => {
+          console.log(e)
           let options = {
             isShow: true,
             message: e.msg || '数据获取出错,请稍后重试',
@@ -80,7 +88,15 @@
           };
           self.showNotice(options);
         })
-      }
+      },
+      handleScroll() {
+        const self = this;
+        // 页面滚动, 设置头部样式
+        let bScrollTop = document.body.scrollTop;
+        if (bScrollTop >= 165) self.avatarScrollActive = true;
+        else self.avatarScrollActive = false;
+      },
+
     },
     components: {
       globalFooter

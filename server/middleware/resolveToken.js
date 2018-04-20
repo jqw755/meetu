@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const verifyToken = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, 'app.get(user)', function (err, decoded) {
-      console.log({'err ': err})
       if (err) {
         reject({code: -1});
       } else {

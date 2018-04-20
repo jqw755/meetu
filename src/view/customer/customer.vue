@@ -16,16 +16,18 @@
       <div class="movements">
         <div class="movements_wrap">
           <div class="timeLine"></div>
-          <div class="item" v-for="item in personalInfo.movements">
-            <div class="top">
-              <p v-if="0" v-for="img in item.images" class="article_wrap">
-                <img :src="img.src" alt="">
-              </p>
-              <!--<p class="title">{{item.title}}</p>-->
-              <p class="content">{{item.content}}</p>
+          <router-link :to='`/detail/${item._id}`' v-for="(item, index) in personalInfo.movements" :key="index">
+            <div class="item">
+              <div class="top">
+                <p v-if="0" v-for="img in item.images" class="article_wrap">
+                  <img :src="img.src" alt="">
+                </p>
+                <!--<p class="title">{{item.title}}</p>-->
+                <p class="content">{{item.content}}</p>
+              </div>
+              <div class="date">{{item.date}}</div>
             </div>
-            <div class="date">{{item.date}}</div>
-          </div>
+          </router-link>
         </div>
       </div>
 
